@@ -1,0 +1,37 @@
+---
+title: "Binary Classifer Analysis"
+author: "Kaylar Fullinton"
+date: 02/19/2022
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+binary_df <- read.csv('C:/Users/runek/dsc520/data/binary-classifier-data.csv')
+
+library(caTools)
+split <- sample.split(binary_df, SplitRatio = 0.8)
+train <- subset(binary_df, split == "TRUE")
+test <- subset(binary_df, split == "FALSE")
+
+log_mod_binary <- glm(train$label ~ ., data = train, family = "binomial")
+
+```
+
+```{r}
+res <- predict(log_mod_binary, test, type = "response")
+
+res <- predict(log_mod_binary, train, type = "response")
+
+binconfmatrix <- table(Actual_Value = train$label, Predicted_Value = res > 0.5)
+binconfmatrix
+
+(binconfmatrix[[1,1]] + binconfmatrix[[2,2]]) / sum(binconfmatrix)
+```
+### The accuracy of this model is about 58%
+
+
+
